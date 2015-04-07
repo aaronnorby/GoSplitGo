@@ -58,14 +58,17 @@ shinyServer(function(input, output) {
   output$GSGPlot <- renderPlot({
     
     ##ggplot    
-    print(ggplot(dataset[dataset$show==input$display & dataset$Date>(Sys.Date()-input$past),], aes(x=Date, y=score, fill=goal)) +
-          geom_bar(stat="identity",position="dodge", color="black") +
+    print(ggplot(dataset[dataset$show==input$display & dataset$Date>(Sys.Date()-input$past),], aes(x=Date, y=score, group=1)) +
+          geom_line() + # geom_bar(stat="identity",position="dodge", color="black") +
+          geom_point(aes(color=goal), size=5) +   
           geom_text(aes(label=score,y=score*1.1)) +
                 ylab("") +
-                xlab("Date") +
+                xlab("Date") + 
                 scale_x_date(breaks="2 days", minor_breaks="1 day", labels = date_format("%d\n%b")) +  # Look at scales package for more alternatives
+                theme_bw() + scale_color_brewer(palette="Set1") +
                 theme(axis.text.x = element_text(size=12, face="bold"),
-                      axis.title.x = element_text(vjust=.2, face="bold", size="20"))
+                      axis.title.x = element_text(vjust=.2, face="bold", size="20"),
+                      panel.background = element_rect(fill = "lightskyblue1"))
           )
   })
 })
